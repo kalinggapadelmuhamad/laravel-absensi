@@ -67,27 +67,26 @@ class AbsenController extends Controller
 
     public function absenMasuk(Request $request, $id)
     {
-        $ip = file_get_contents("http://ipecho.net/plain");
 
-        $url = 'http://ip-api.com/json/' . $ip;
+// Mendapatkan alamat IP pengguna
+$ip = file_get_contents("http://ipecho.net/plain");
 
-        $tz = file_get_contents($url);
+// Mendapatkan informasi zona waktu berdasarkan alamat IP
+    $url = 'http://ip-api.com/json/' . $ip;
+    $locationInfo = json_decode(file_get_contents($url), true);
 
-        $tz = json_decode($tz, true)['timezone'];
+    // Mengambil zona waktu dari informasi lokasi
+    $timezone = new DateTimeZone($locationInfo['timezone']);
 
-        date_default_timezone_set($tz);
+    // Membuat objek DateTime berdasarkan zona waktu pengguna
+    $currentDateTime = new DateTime("now", $timezone);
 
-        // This start to get the timezone
-        $pcTimezone = date_default_timezone_get();
+    // Mendapatkan jam saat ini
+    $formattedTime = $currentDateTime->format("H:i");
 
-        // Step 2: Create a DateTimeZone object using your PC's timezone
-        $timezone = new DateTimeZone($pcTimezone);
+    // Mendapatkan tanggal dan waktu lengkap
+    $full_jam_absen = $currentDateTime->format("Y-m-d H:i:s O");
 
-        // Step 3: Create a DateTime object using the DateTimeZone object and the current time
-        $currentDateTime = new DateTime("now", $timezone);
-
-        $formattedDateTime = $currentDateTime->format("H:i");
-        $full_jam_absen = $currentDateTime->format("Y-m-d H:i:s O");
         // This end the timezone
 
         $request["full_jam_absen"] = $full_jam_absen;
@@ -99,7 +98,7 @@ class AbsenController extends Controller
 
         $request["jarak_masuk"] = $this->distance($request["lat_absen"], $request["long_absen"], $lat_kantor, $long_kantor, "K") * 1000;
 
-        $request["jam_absen"] = $formattedDateTime;
+        $request["jam_absen"] = $formattedTime;
 
         if ($request["jarak_masuk"] > $radius) {
             Alert::error('Diluar Jangkauan', 'Lokasi Anda Diluar Radius ' . $nama_lokasi);

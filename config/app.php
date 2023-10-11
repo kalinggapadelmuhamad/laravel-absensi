@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://fef1-103-81-64-6.ngrok-free.app/absen/public'),
 
     'asset_url' => env('ASSET_URL', null),
 
