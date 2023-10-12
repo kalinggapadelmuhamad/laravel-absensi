@@ -67,14 +67,13 @@ class authController extends Controller
     {
         $credentials = $request->validate([
             'username' => 'required',
-            'password' => 'required'
+            'password' => 'required|min:8'
         ]);
-        
+
         $remember_me = $request->has('remember') ? true : false;
 
         if (Auth::attempt($credentials, $remember_me)) {
             $request->session()->regenerate();
-
             return redirect()->intended('/dashboard');
         }
 
