@@ -4,6 +4,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ $title }}</title>
@@ -51,7 +53,8 @@
 
         {{-- maps leaflet js --}}
         <link rel="stylesheet" href="{{ asset('https://unpkg.com/leaflet@1.8.0/dist/leaflet.css') }}"
-            integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
+            integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+            crossorigin="" />
 
         <script src="{{ asset('https://unpkg.com/leaflet@1.8.0/dist/leaflet.js') }}"
             integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="

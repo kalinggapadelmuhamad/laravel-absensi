@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Psy\Readline\Hoa\Console;
 use RealRashid\SweetAlert\Facades\Alert;
+use Stevebauman\Location\Facades\Location;
 
 function get_local_time()
 {
@@ -68,24 +69,50 @@ class AbsenController extends Controller
     public function absenMasuk(Request $request, $id)
     {
 
-// Mendapatkan alamat IP pengguna
-$ip = file_get_contents("http://ipecho.net/plain");
+        // // Mendapatkan alamat IP pengguna
+        // $ip = file_get_contents("http://ipecho.net/plain");
 
-// Mendapatkan informasi zona waktu berdasarkan alamat IP
-    $url = 'http://ip-api.com/json/' . $ip;
-    $locationInfo = json_decode(file_get_contents($url), true);
+        // Mendapatkan informasi zona waktu berdasarkan alamat IP
 
-    // Mengambil zona waktu dari informasi lokasi
-    $timezone = new DateTimeZone($locationInfo['timezone']);
+        $ip =  $_SERVER['REMOTE_ADDR'];
+        $url = 'http://ip-api.com/json/' . $ip;
+        $locationInfo = json_decode(file_get_contents($url), true);
 
-    // Membuat objek DateTime berdasarkan zona waktu pengguna
-    $currentDateTime = new DateTime("now", $timezone);
+        // Mengambil zona waktu dari informasi lokasi
+        $timezone = new DateTimeZone($locationInfo['timezone']);
 
-    // Mendapatkan jam saat ini
-    $formattedTime = $currentDateTime->format("H:i");
+        // Membuat objek DateTime berdasarkan zona waktu pengguna
+        $currentDateTime = new DateTime("now", $timezone);
 
-    // Mendapatkan tanggal dan waktu lengkap
-    $full_jam_absen = $currentDateTime->format("Y-m-d H:i:s O");
+        // Mendapatkan jam saat ini
+        $formattedTime = $currentDateTime->format("H:i");
+
+        // Mendapatkan tanggal dan waktu lengkap
+        $full_jam_absen = $currentDateTime->format("Y-m-d H:i:s O");
+
+
+        // $ip =  $_SERVER['REMOTE_ADDR'];
+
+        // $url = 'http://ip-api.com/json/' . $ip;
+
+        // $tz = file_get_contents($url);
+
+        // $tz = json_decode($tz, true)['timezone'];
+
+        // date_default_timezone_set($tz);
+
+        // // This start to get the timezone
+        // $pcTimezone = date_default_timezone_get();
+
+
+        // // Step 2: Create a DateTimeZone object using your PC's timezone
+        // $timezone = new DateTimeZone($pcTimezone);
+
+        // // Step 3: Create a DateTime object using the DateTimeZone object and the current time
+        // $currentDateTime = new DateTime("now", $timezone);
+
+        // $formattedDateTime = $currentDateTime->format("H:i");
+        // $full_jam_absen = $currentDateTime->format("Y-m-d H:i:s O");
 
         // This end the timezone
 
@@ -99,7 +126,6 @@ $ip = file_get_contents("http://ipecho.net/plain");
         $request["jarak_masuk"] = $this->distance($request["lat_absen"], $request["long_absen"], $lat_kantor, $long_kantor, "K") * 1000;
 
         $request["jam_absen"] = $formattedTime;
-
         if ($request["jarak_masuk"] > $radius) {
             Alert::error('Diluar Jangkauan', 'Lokasi Anda Diluar Radius ' . $nama_lokasi);
             return redirect('/absen');
@@ -159,7 +185,7 @@ $ip = file_get_contents("http://ipecho.net/plain");
     public function absenPulang(Request $request, $id)
     {
 
-        $ip = file_get_contents("http://ipecho.net/plain");
+        $ip =  $_SERVER['REMOTE_ADDR'];
 
         $url = 'http://ip-api.com/json/' . $ip;
 
